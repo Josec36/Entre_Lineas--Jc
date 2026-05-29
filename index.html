@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entre Líneas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Fondo geométrico decorativo -->
+    <div class="bg-deco" aria-hidden="true">
+        <div class="bg-circle c1"></div>
+        <div class="bg-circle c2"></div>
+        <div class="bg-circle c3"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         NAVBAR
+    ═══════════════════════════════════════════════ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="nav-logo">Entre Líneas</span>
+            <div class="nav-actions">
+                <button id="btn-noche" class="btn-icon" onclick="toggleModoNoche()" title="Modo Lectura Nocturna">
+                    🌙 Modo Lectura
+                </button>
+                <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menú">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#inicio"      onclick="toggleMenu()">Inicio</a></li>
+                <li><a href="#ranking"     onclick="toggleMenu()">Ranking</a></li>
+                <li><a href="#proyecto"    onclick="toggleMenu()">El Proyecto</a></li>
+                <li><a href="#importancia" onclick="toggleMenu()">Lectura</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════════ -->
+    <header class="hero" id="inicio">
+        <div class="hero-content">
+            <span class="hero-tag">Año Escolar 2026</span>
+            <h1>Entre Líneas</h1>
+            <p>Tus desafíos de lectura y tu progreso en un solo lugar.</p>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- ─────────────────────────────────────────
+             SECCIÓN 1: LOGIN
+        ───────────────────────────────────────── -->
+        <section class="card" id="login-box">
+            <div class="card-header">
+                <svg viewBox="0 0 24 24" class="card-icon"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                <h2>Acceso de Estudiante</h2>
+            </div>
+            <p class="card-subtitle">Identifícate para comenzar tu sesión lectora.</p>
+            <div class="input-group">
+                <input type="text"     id="login-user" placeholder="Nombre y Apellido completos"
+                       onkeydown="if(event.key==='Enter') loginStudent()">
+                <input type="password" id="login-pass" placeholder="Tu DNI (contraseña)"
+                       onkeydown="if(event.key==='Enter') loginStudent()">
+                <button class="btn-primary" onclick="loginStudent()">Ingresar</button>
+            </div>
+            <p id="login-error" class="error-msg"></p>
+        </section>
+
+        <!-- ─────────────────────────────────────────
+             SECCIÓN 2: CÓDIGO DEL LIBRO
+        ───────────────────────────────────────── -->
+        <section class="card hidden" id="unlock-box">
+            <div class="card-header">
+                <svg viewBox="0 0 24 24" class="card-icon"><path d="M18 1l-1.4 1.4 1 1L14.2 6.8A3.9 3.9 0 0 0 12 6a4 4 0 1 0 4 4 3.9 3.9 0 0 0-.8-2.2l3.4-3.4 1 1L21 4Zm-6 11a2 2 0 1 1 2-2 2 2 0 0 1-2 2ZM4 20v-1a7 7 0 0 1 7-7h.3A8.9 8.9 0 0 0 10 14a9 9 0 0 0-9 9v1Z"/></svg>
+                <h2>Hola, <span id="logged-student-name"></span> 👋</h2>
+            </div>
+            <p class="card-subtitle">Ingresa el código oculto en el libro físico de la biblioteca para abrir la trivia.</p>
+            <div class="input-group">
+                <input type="text" id="book-code" placeholder="Código de activación (ej: PRINCIPITO1)"
+                       style="text-transform:uppercase"
+                       onkeydown="if(event.key==='Enter') unlockBook()">
+                <button class="btn-primary" onclick="unlockBook()">Desbloquear</button>
+            </div>
+            <p id="unlock-error" class="error-msg"></p>
+            <button class="btn-ghost" onclick="cerrarSesion()" style="margin-top:1rem;">← Cerrar sesión</button>
+        </section>
+
+        <!-- ─────────────────────────────────────────
+             SECCIÓN 3: QUIZ
+        ───────────────────────────────────────── -->
+        <section class="card hidden" id="quiz-box">
+            <div class="quiz-header">
+                <div>
+                    <p id="quiz-titulo" class="quiz-titulo"></p>
+                    <p id="quiz-autor"  class="quiz-autor"></p>
+                </div>
+                <div class="timer-badge">
+                    <span id="quiz-timer">20</span><small>s</small>
+                </div>
+            </div>
+
+            <p id="quiz-numero" class="quiz-numero"></p>
+            <div class="progress-bar-bg">
+                <div id="progress" class="progress-bar-fill"></div>
+            </div>
+
+            <h3 id="quiz-question" class="quiz-question">Cargando...</h3>
+            <div id="quiz-options" class="quiz-options"></div>
+        </section>
+
+        <!-- ─────────────────────────────────────────
+             SECCIÓN 4: RESULTADO
+        ───────────────────────────────────────── -->
+        <section class="card hidden" id="result-box">
+            <div class="result-center">
+                <div class="result-medalla" id="result-medalla">🥇</div>
+                <h2 class="result-titulo">Trivia completada</h2>
+                <p id="result-libro" class="result-libro"></p>
+                <div class="result-score">
+                    <span id="result-score-num" class="score-num">0</span>
+                    <span class="score-sep">/ </span>
+                    <span id="result-score-max" class="score-max">0</span>
+                    <span class="score-label"> pts</span>
+                </div>
+                <div class="result-porcentaje-badge">
+                    <span id="result-porcentaje">0%</span> de aciertos
+                </div>
+                <p id="result-mensaje" class="result-mensaje"></p>
+            </div>
+            <div class="result-acciones">
+                <button class="btn-primary" onclick="cerrarSesion()">Ingresar otro código</button>
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────
+             RANKING
+        ───────────────────────────────────────── -->
+        <section class="card" id="ranking">
+            <div class="card-header">
+                <svg viewBox="0 0 24 24" class="card-icon"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A6.01 6.01 0 0 0 11 14.93V19H7v2h10v-2h-4v-4.07a6.01 6.01 0 0 0 3.61-2.99C19.08 11.63 21 9.55 21 7V6c0-1.1-.9-2-2-2zm-12 5c-1.1 0-2-.9-2-2V7h2v3zm10-2c0 1.1-.9 2-2 2V7h2v1z"/></svg>
+                <h2>Líderes de Lectura</h2>
+            </div>
+            <p class="card-subtitle">Los cinco lectores más constantes del salón.</p>
+            <ol id="leaderboard" class="leaderboard-list"></ol>
+
+            <div class="search-panel">
+                <h3>Buscar mi posición</h3>
+                <div class="input-group">
+                    <input type="text" id="search-student" oninput="buscarEstudiante()"
+                           placeholder="Escribe tu nombre...">
+                </div>
+                <div id="search-result-card" class="search-result hidden"></div>
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────
+             SOBRE EL PROYECTO
+        ───────────────────────────────────────── -->
+        <section class="card info-card" id="proyecto">
+            <div class="card-header">
+                <svg viewBox="0 0 24 24" class="card-icon"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <h2>Sobre el Proyecto</h2>
+            </div>
+            <p class="card-subtitle">Objetivos y finalidades de la plataforma escolar.</p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Autonomía Lectora</h3>
+                    <p>Los estudiantes gestionan su propio progreso sin depender del docente en todo momento.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Inclusión en Biblioteca</h3>
+                    <p>El libro físico es el único puente de acceso. La tecnología lleva de vuelta a los estantes.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Competencia Sana</h3>
+                    <p>El ranking transparente refleja el esfuerzo real de cada lector en el salón.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────
+             IMPORTANCIA DE LA LECTURA
+        ───────────────────────────────────────── -->
+        <section class="card info-card clear" id="importancia">
+            <div class="card-header">
+                <svg viewBox="0 0 24 24" class="card-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <h2>Importancia de la Lectura</h2>
+            </div>
+            <p class="card-subtitle">Beneficios de entrenar tu mente a través de los libros.</p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Desarrollo Cognitivo</h3>
+                    <p>La lectura estimula la corteza cerebral, mejorando la memoria a largo plazo y la concentración.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Reducción del Estrés</h3>
+                    <p>Leer en silencio apenas 6 minutos puede reducir los niveles de estrés escolar significativamente.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Riqueza Lingüística</h3>
+                    <p>Exponerse a textos incrementa el vocabulario y estructura una ortografía impecable de forma intuitiva.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ═══════════════════════════════════════════════
+         ENLIN — mascota flotante
+    ═══════════════════════════════════════════════ -->
+    <div id="enlin-widget" aria-label="Mascota ENLIN">
+        <div id="enlin-bubble" class="hidden" role="status"></div>
+        <div class="enlin-character" id="enlin-clickarea">
+            <div class="enlin-hand left"></div>
+            <div class="enlin-hand right"></div>
+            <div class="enlin-book-wrapper" id="enlin-body-mesh">
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover-front">
+                    <div class="enlin-face">
+                        <div id="enlin-brows">
+                            <span class="brow left"></span>
+                            <span class="brow right"></span>
+                        </div>
+                        <div id="enlin-eyes" class="eyes-normal">
+                            <span class="dot-eye"></span>
+                            <span class="dot-eye"></span>
+                        </div>
+                        <div id="enlin-mouth" class="mouth-normal"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="enlin-foot left"></div>
+            <div class="enlin-foot right"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════════ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <h4>Soporte Técnico</h4>
+                <p>¿Problemas con tu código o registro?</p>
+                <p>📞 +51 987 654 321 (WhatsApp)</p>
+            </div>
+            <div class="footer-right">
+                <p>© 2026 Entre Líneas</p>
+                <p class="footer-sub">Sistema Autónomo de Gestión de Comprensión Lectora</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════
+         SCRIPTS — ORDEN IMPORTANTE
+         1. Firebase SDK
+         2. firebase-config.js   ← inicializa la app
+         3. trivias/*.js         ← definen las trivias
+         4. app.js               ← lógica principal
+    ═══════════════════════════════════════════════ -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+
+    <!-- Trivias: agrega una línea por cada nueva trivia -->
+    <script src="trivias/trivia_principito.js"></script>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
