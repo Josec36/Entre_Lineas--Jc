@@ -61,8 +61,8 @@ function iniciarEscuchaFirebase() {
 // 🔑 LOGIN
 // --------------------------------------------------------------------------
 function loginStudent() {
-    const nombreInput = document.getElementById("login-user").value.trim().toLowerCase();
-    const dniInput    = document.getElementById("login-pass").value.trim();
+    const nombreInput = document.getElementById("login-user").value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const dniInput    = document.getElementById("login-pass").value.trim().replace(/\s/g, "");
     const errorEl     = document.getElementById("login-error");
 
     if (!nombreInput || !dniInput) {
@@ -71,7 +71,8 @@ function loginStudent() {
     }
 
     const encontrado = alumnosDB.find(
-        a => a.nombre.trim().toLowerCase() === nombreInput && a.dni === dniInput
+    a => a.nombre.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === nombreInput 
+    && a.dni.trim() === dniInput
     );
 
     if (encontrado) {
