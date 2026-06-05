@@ -293,7 +293,7 @@ input::placeholder { color: rgba(94,72,64,.35); font-size:.85rem; }
     margin-top: .15rem;
     flex-shrink: 0;
 }
-
+.info-item-body {}
 .info-item h3 {
     font-family: var(--font-serif);
     font-size: 1.2rem; font-weight: 600;
